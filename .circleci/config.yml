@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.2
+
+jobs:
+  build-and-jest:
+    working_directory: ~/frontend
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+          node-version: '16.15.0'
+      - run:
+          name: node-version-check
+          command: node --version
+      - run:
+          name: clone-repo
+          command: git clone https://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@github.com/SiyuQian/shopify-hydrogen-poc.git
+      - run:
+          name: install-packages
+          command: cd ~/frontend/shopify-hydrogen-poc && yarn
+      - run:
+          name: run-jest
+          command: cd ~/frontend/shopify-hydrogen-poc && yarn test:ci
+
+workflows:
+  build-and-test:
+    jobs:
+      - build-and-jest
